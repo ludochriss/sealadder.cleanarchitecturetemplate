@@ -35,9 +35,14 @@ namespace CleanArchitecture.Infrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("MovieId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Emotions");
                 });
@@ -80,7 +85,12 @@ namespace CleanArchitecture.Infrastructure.Migrations
                     b.Property<string>("Url")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Movies");
                 });
@@ -165,32 +175,34 @@ namespace CleanArchitecture.Infrastructure.Migrations
 
             modelBuilder.Entity("CleanArchitecture.Domain.Entities.TotalSearches", b =>
                 {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
 
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("id");
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.ToTable("TotalSearches");
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Domain.Entities.TotalUpdates", b =>
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("TotalUpdates");
+                    b.ToTable("MovieUsers");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Infrastructure.Identity.ApplicationUser", b =>
@@ -478,8 +490,19 @@ namespace CleanArchitecture.Infrastructure.Migrations
             modelBuilder.Entity("CleanArchitecture.Domain.Entities.Emotion", b =>
                 {
                     b.HasOne("CleanArchitecture.Domain.Entities.Movie", null)
-                        .WithMany("Emotions")
+                        .WithMany("MovieEmotions")
                         .HasForeignKey("MovieId");
+
+                    b.HasOne("CleanArchitecture.Domain.Entities.User", null)
+                        .WithMany("UserEmotions")
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.Movie", b =>
+                {
+                    b.HasOne("CleanArchitecture.Domain.Entities.User", null)
+                        .WithMany("Movies")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Domain.Entities.TodoItem", b =>

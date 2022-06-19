@@ -8,6 +8,7 @@ using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Application.Movies.Commands.TagEmotion
 {
@@ -24,24 +25,33 @@ namespace CleanArchitecture.Application.Movies.Commands.TagEmotion
     public class TagMovieWithEmotionCommandHandler : IRequestHandler<TagMovieWithEmotionCommand, bool>
     {
         private readonly IApplicationDbContext _db;
-        public TagMovieWithEmotionCommandHandler(IApplicationDbContext db)
+        private readonly ILoggerFactory _logger;
+        private IApplicationDbContext _context;
+
+        public TagMovieWithEmotionCommandHandler(IApplicationDbContext db, ILoggerFactory logger)
         {
+            _logger = logger;   
             _db = db;
         }
+
+   
+
         public async Task<bool> Handle(TagMovieWithEmotionCommand request, CancellationToken cancellationToken)
         {
+           var logger = _logger.CreateLogger<TagMovieWithEmotionCommand>();
+            logger.LogInformation($"Emotion tagging request made by user Id : {request.UserId} at {DateTime.Now}" +
+                $" for Movie of Id : {request.MovieId} with emotion of  : {request.Emotion}");
             var result = await
                 _db.MovieUsers
               .Include(u => u.UserEmotions)
               .Include(m => m.Movies)
-              .ThenInclude(m => m.MovieEmotions)
-              
-              .FirstOrDefaultAsync(u=>u.Id == request.UserId);
-            
-            
+              .ThenInclude(m => m.MovieEmotions)              
+              .FirstOrDefaultAsync(u=>u.Id == request.UserId);            
+           
             var movieExists = result.Movies.Exists(m => m.Id == request.MovieId);
             if (!movieExists)
             {
+                logger.LogInformation($"Request returned null, movie not located in database");
                 return false;
             }
             var mov = result.Movies.Find(m => m.Id == request.MovieId);

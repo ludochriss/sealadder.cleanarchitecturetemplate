@@ -20,7 +20,7 @@ namespace CleanArchitecture.Application.Movies.Queries
 {
     public class GetMovieQuery : IRequest<MovieVm>
     {
-        public int EmotionId { get; set; }
+        
         public string Path { get; set; }
     }
     public class GetMovieQueryHandler : IRequestHandler<GetMovieQuery, MovieVm>
@@ -44,12 +44,10 @@ namespace CleanArchitecture.Application.Movies.Queries
             
         }   
         public async Task<MovieVm> Handle(GetMovieQuery request, CancellationToken cancellationToken)
-        {          
-            var logger = _logger.CreateLogger<GetMovieQueryHandler>();        
-
+        {            //------STOPWATCH & LOGGER------
+            var logger = _logger.CreateLogger<GetMovieQueryHandler>();   
             logger.LogInformation($"Request received at {DateTime.Now}");
-            Stopwatch stopwatch = new Stopwatch();
-            //------STOPWATCH & LOGGER------
+            Stopwatch stopwatch = new Stopwatch();          
             stopwatch.Start();
             logger.Log(LogLevel.Information, "Timing Request..");
 
@@ -93,8 +91,7 @@ namespace CleanArchitecture.Application.Movies.Queries
                 var mR = _cache.DeserializeMovieResponse(response);
                 try
                 {
-                    var m =  await _context.Movies
-                        
+                    var m =  await _context.Movies                        
                         .FirstOrDefaultAsync(l => l.Id == mR.Id);
 
                     if (m == null)
@@ -102,8 +99,7 @@ namespace CleanArchitecture.Application.Movies.Queries
                         m = new Movie();                
                     }
                     //updated information about movies
-                    m.UpdateMovieInfo(new MovieSearchedEvent(m, stopwatch.Elapsed, false), request.Path);
-                 
+                    m.UpdateMovieInfo(new MovieSearchedEvent(m, stopwatch.Elapsed, false), request.Path);                 
                    
                     //update the tracked item and save
                     _context.Movies.Update(m);

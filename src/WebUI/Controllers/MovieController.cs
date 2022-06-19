@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using CleanArchitecture.Application.Analytics;
+using CleanArchitecture.Application.Analytics.Queries;
 using CleanArchitecture.Application.Movies.Commands.TagEmotion;
 using CleanArchitecture.Application.Movies.Queries;
 using CleanArchitecture.Application.Movies.Queries.GetMovies;
@@ -37,14 +39,32 @@ namespace CleanArchitecture.WebUI.Controllers
 
             throw new NotImplementedException();
         }
-
-        public async Task<ActionResult<RequestVM>> RequestInfo(DateTime start, DateTime end)
+        [HttpGet]
+        [Route("Movie/GeneralAnalyticsInfo")]
+        public async Task<ActionResult<RequestVM>> RequestAnalyticsInfo(string start, string end)
         {
             return await Mediator.Send(new AnalyticsQuery
             {
+                
                 Start = start,
                 End = end
-            }) ;
+            }); ;
+
+        }
+        [HttpGet]
+        [Route("Movie/UserAnalyticsInfo")]
+        public async Task<ActionResult<UserInfoVm>> GetRequestsForUser(string id)
+        {
+            bool valid = Int32.TryParse(id, out int result);
+            if (valid)
+            {
+                return await Mediator.Send(new UserAnalyticsQuery
+                {
+                    UserId = result
+
+                }) ;
+            }
+            throw new Exception("Id cannot be a non-integer");
 
         }
 
@@ -58,44 +78,7 @@ namespace CleanArchitecture.WebUI.Controllers
         //    });
         //}
 
-        //[HttpPost]
-        //public async Task<ActionResult<int>> Create(CreateMovieCommand command)
-        //{
-        //    return await Mediator.Send(command);
-        //}
 
-        //[HttpPut("{id}")]
-        //public async Task<ActionResult> Update(int id, UpdateMovieCommand command)
-        //{
-        //    if (id != command.Id)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    await Mediator.Send(command);
-
-        //    return NoContent();
-        //}
-
-        //[HttpPut("[action]")]
-        //public async Task<ActionResult> UpdateMovieDetails(int id, UpdateMovieDetailsCommand command)
-        //{
-        //    if (id != command.Id)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    await Mediator.Send(command);
-
-        //    return NoContent();
-        //}
-
-        //[HttpDelete("{id}")]
-        //public async Task<ActionResult> Delete(int id)
-        //{
-        //    await Mediator.Send(new DeleteMovieCommand { Id = id });
-
-        //    return NoContent();
-        //}
+ 
     }
 }

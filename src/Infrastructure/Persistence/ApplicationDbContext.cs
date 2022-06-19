@@ -32,14 +32,12 @@ namespace CleanArchitecture.Infrastructure.Persistence
             _domainEventService = domainEventService;
             _dateTime = dateTime;
         }
-        public DbSet<TotalUpdates> TotalUpdates { get; set; }
+        
         public DbSet<TotalSearches> TotalSearches { get; set; }
         public DbSet<Emotion> Emotions { get; set; }
         public DbSet<TodoItem> TodoItems { get; set; }
-
         public DbSet<TodoList> TodoLists { get; set; }
         public DbSet<Movie> Movies { get; set; }
-
         public DbSet<User> MovieUsers { get; set; }
 
 

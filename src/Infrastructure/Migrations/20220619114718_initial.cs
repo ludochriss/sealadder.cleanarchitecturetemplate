@@ -64,25 +64,16 @@ namespace CleanArchitecture.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Movies",
+                name: "MovieUsers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false),
-                    Created = table.Column<DateTime>(nullable: false),
-                    CreatedBy = table.Column<string>(nullable: true),
-                    LastModified = table.Column<DateTime>(nullable: true),
-                    LastModifiedBy = table.Column<string>(nullable: true),
-                    Title = table.Column<string>(nullable: true),
-                    Adult = table.Column<bool>(nullable: false),
-                    Url = table.Column<string>(nullable: true),
-                    OriginalLanguage = table.Column<string>(nullable: true),
-                    ImdbId = table.Column<string>(nullable: true),
-                    MovieSearchCount = table.Column<int>(nullable: false),
-                    RequestTotal = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Movies", x => x.Id);
+                    table.PrimaryKey("PK_MovieUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -124,26 +115,13 @@ namespace CleanArchitecture.Infrastructure.Migrations
                 name: "TotalSearches",
                 columns: table => new
                 {
-                    id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Count = table.Column<int>(nullable: false)
+                    Created = table.Column<DateTime>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    LastModified = table.Column<DateTime>(nullable: true),
+                    LastModifiedBy = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TotalSearches", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TotalUpdates",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Count = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TotalUpdates", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -253,22 +231,30 @@ namespace CleanArchitecture.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Emotions",
+                name: "Movies",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true),
-                    Count = table.Column<int>(nullable: false),
-                    MovieId = table.Column<int>(nullable: true)
+                    Id = table.Column<int>(nullable: false),
+                    Created = table.Column<DateTime>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    LastModified = table.Column<DateTime>(nullable: true),
+                    LastModifiedBy = table.Column<string>(nullable: true),
+                    Title = table.Column<string>(nullable: true),
+                    Adult = table.Column<bool>(nullable: false),
+                    Url = table.Column<string>(nullable: true),
+                    OriginalLanguage = table.Column<string>(nullable: true),
+                    ImdbId = table.Column<string>(nullable: true),
+                    MovieSearchCount = table.Column<int>(nullable: false),
+                    RequestTotal = table.Column<int>(nullable: false),
+                    UserId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Emotions", x => x.Id);
+                    table.PrimaryKey("PK_Movies", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Emotions_Movies_MovieId",
-                        column: x => x.MovieId,
-                        principalTable: "Movies",
+                        name: "FK_Movies_MovieUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "MovieUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -299,6 +285,34 @@ namespace CleanArchitecture.Infrastructure.Migrations
                         principalTable: "TodoLists",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Emotions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    Count = table.Column<int>(nullable: false),
+                    MovieId = table.Column<int>(nullable: true),
+                    UserId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Emotions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Emotions_Movies_MovieId",
+                        column: x => x.MovieId,
+                        principalTable: "Movies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Emotions_MovieUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "MovieUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -357,6 +371,16 @@ namespace CleanArchitecture.Infrastructure.Migrations
                 column: "MovieId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Emotions_UserId",
+                table: "Emotions",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Movies_UserId",
+                table: "Movies",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_Expiration",
                 table: "PersistedGrants",
                 column: "Expiration");
@@ -405,9 +429,6 @@ namespace CleanArchitecture.Infrastructure.Migrations
                 name: "TotalSearches");
 
             migrationBuilder.DropTable(
-                name: "TotalUpdates");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -418,6 +439,9 @@ namespace CleanArchitecture.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "TodoLists");
+
+            migrationBuilder.DropTable(
+                name: "MovieUsers");
         }
     }
 }

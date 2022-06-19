@@ -13,7 +13,7 @@ namespace CleanArchitecture.Application.Common.Interfaces
 
         DbSet<Movie> Movies { get; set; }
 
-         DbSet<TotalUpdates> TotalUpdates { get; set; }
+         
          DbSet<TotalSearches> TotalSearches { get; set; }
          DbSet<Emotion> Emotions { get; set; }
 

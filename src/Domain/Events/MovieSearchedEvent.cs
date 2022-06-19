@@ -8,6 +8,10 @@ namespace CleanArchitecture.Domain.Events
 {
     public class MovieSearchedEvent :DomainEvent
     {
+        public MovieSearchedEvent()
+        {
+
+        }
         public MovieSearchedEvent(Movie movie, TimeSpan timeTaken, bool cache)
         {
             TimeTaken = timeTaken;
@@ -18,6 +22,6 @@ namespace CleanArchitecture.Domain.Events
         public Movie MovieItem { get; set; }
         public TimeSpan TimeTaken { get; set; }
         public bool IsFromCache { get; set; }
-        public Dictionary<string,int> SearchedMovieEmotions { get; set; }       
+         
     }
 }

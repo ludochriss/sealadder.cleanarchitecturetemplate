@@ -8,6 +8,10 @@ namespace CleanArchitecture.Domain.Events
 {
     public class EmotionTaggedEvent : DomainEvent
     {
+        public EmotionTaggedEvent()
+        {
+
+        }
         public EmotionTaggedEvent(Movie movie, User user)
         {
             DateOccurred=   DateTime.Now;
