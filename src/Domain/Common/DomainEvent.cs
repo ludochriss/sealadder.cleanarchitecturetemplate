@@ -8,8 +8,10 @@ namespace CleanArchitecture.Domain.Common
         public List<DomainEvent> DomainEvents { get; set; }
     }
 
+    
     public abstract class DomainEvent
     {
+        
         protected DomainEvent()
         {
             DateOccurred = DateTimeOffset.UtcNow;

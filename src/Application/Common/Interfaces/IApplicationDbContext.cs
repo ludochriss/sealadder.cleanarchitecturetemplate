@@ -11,6 +11,14 @@ namespace CleanArchitecture.Application.Common.Interfaces
 
         DbSet<TodoItem> TodoItems { get; set; }
 
+        DbSet<Movie> Movies { get; set; }
+
+         DbSet<TotalUpdates> TotalUpdates { get; set; }
+         DbSet<TotalSearches> TotalSearches { get; set; }
+         DbSet<Emotion> Emotions { get; set; }
+
+        DbSet<User> MovieUsers { get; set; } 
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

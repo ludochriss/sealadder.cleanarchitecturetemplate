@@ -24,7 +24,7 @@ namespace CleanArchitecture.WebUI
                 try
                 {
                     var context = services.GetRequiredService<ApplicationDbContext>();
-
+                    
                     if (context.Database.IsSqlServer())
                     {
                         context.Database.Migrate();
@@ -35,6 +35,8 @@ namespace CleanArchitecture.WebUI
 
                     await ApplicationDbContextSeed.SeedDefaultUserAsync(userManager, roleManager);
                     await ApplicationDbContextSeed.SeedSampleDataAsync(context);
+                    await ApplicationDbContextSeed.SeedSampleMovieUsers(context);
+                    //await ApplicationDbContextSeed.SeedEmotionsAsync(context);
                 }
                 catch (Exception ex)
                 {

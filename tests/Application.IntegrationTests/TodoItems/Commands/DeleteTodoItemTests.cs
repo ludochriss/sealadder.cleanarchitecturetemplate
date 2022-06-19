@@ -18,8 +18,8 @@ namespace CleanArchitecture.Application.IntegrationTests.TodoItems.Commands
         {
             var command = new DeleteTodoItemCommand { Id = 99 };
 
-            FluentActions.Invoking(() =>
-                SendAsync(command)).Should().Throw<NotFoundException>();
+            _ = FluentActions.Invoking(() =>
+                  SendAsync(command)).Should().ThrowAsync<NotFoundException>();
         }
 
         [Test]

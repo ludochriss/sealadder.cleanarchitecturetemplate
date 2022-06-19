@@ -18,7 +18,7 @@ namespace CleanArchitecture.Application.IntegrationTests.TodoLists.Commands
             var command = new CreateTodoListCommand();
 
             FluentActions.Invoking(() =>
-                SendAsync(command)).Should().Throw<ValidationException>();
+                SendAsync(command)).Should().ThrowAsync<ValidationException>();
         }
 
         [Test]
@@ -34,8 +34,8 @@ namespace CleanArchitecture.Application.IntegrationTests.TodoLists.Commands
                 Title = "Shopping"
             };
 
-            FluentActions.Invoking(() =>
-                SendAsync(command)).Should().Throw<ValidationException>();
+       await     FluentActions.Invoking(() =>
+                SendAsync(command)).Should().ThrowAsync<ValidationException>();
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace CleanArchitecture.Application.IntegrationTests.TodoLists.Commands
             list.Should().NotBeNull();
             list.Title.Should().Be(command.Title);
             list.CreatedBy.Should().Be(userId);
-            list.Created.Should().BeCloseTo(DateTime.Now, 10000);
+            list.Created.Should().BeCloseTo(DateTime.Now, TimeSpan.FromMilliseconds(10000));
         }
     }
 }

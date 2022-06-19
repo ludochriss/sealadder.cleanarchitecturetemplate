@@ -18,7 +18,7 @@ namespace CleanArchitecture.Application.IntegrationTests.TodoLists.Commands
             var command = new DeleteTodoListCommand { Id = 99 };
 
             FluentActions.Invoking(() =>
-                SendAsync(command)).Should().Throw<NotFoundException>();
+                SendAsync(command)).Should().ThrowAsync<NotFoundException>();
         }
 
         [Test]

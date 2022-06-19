@@ -19,6 +19,8 @@ namespace CleanArchitecture.Infrastructure.Persistence
         private readonly IDateTime _dateTime;
         private readonly IDomainEventService _domainEventService;
 
+
+        //options passed tobase
         public ApplicationDbContext(
             DbContextOptions options,
             IOptions<OperationalStoreOptions> operationalStoreOptions,
@@ -30,10 +32,16 @@ namespace CleanArchitecture.Infrastructure.Persistence
             _domainEventService = domainEventService;
             _dateTime = dateTime;
         }
-
+        public DbSet<TotalUpdates> TotalUpdates { get; set; }
+        public DbSet<TotalSearches> TotalSearches { get; set; }
+        public DbSet<Emotion> Emotions { get; set; }
         public DbSet<TodoItem> TodoItems { get; set; }
 
         public DbSet<TodoList> TodoLists { get; set; }
+        public DbSet<Movie> Movies { get; set; }
+
+        public DbSet<User> MovieUsers { get; set; }
+
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
@@ -63,8 +71,17 @@ namespace CleanArchitecture.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
+           
             base.OnModelCreating(builder);
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optBuilder)
+        {
+
+            if (!optBuilder.IsConfigured)
+            {
+                optBuilder.UseSqlServer("DefaultConnection");
+            }
         }
 
         private async Task DispatchEvents()

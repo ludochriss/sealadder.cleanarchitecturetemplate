@@ -22,8 +22,8 @@ namespace CleanArchitecture.Application.IntegrationTests.TodoLists.Commands
 
             command.GetType().Should().BeDecoratedWith<AuthorizeAttribute>();
 
-            FluentActions.Invoking(() =>
-                SendAsync(command)).Should().Throw<UnauthorizedAccessException>();
+             FluentActions.Invoking(() =>
+                SendAsync(command)).Should().ThrowAsync<UnauthorizedAccessException>();
         }
 
         [Test]
@@ -33,8 +33,8 @@ namespace CleanArchitecture.Application.IntegrationTests.TodoLists.Commands
 
             var command = new PurgeTodoListsCommand();
 
-            FluentActions.Invoking(() =>
-                SendAsync(command)).Should().Throw<ForbiddenAccessException>();
+           await FluentActions.Invoking(() =>
+                SendAsync(command)).Should().ThrowAsync<ForbiddenAccessException>();
         }
 
         [Test]
@@ -44,8 +44,8 @@ namespace CleanArchitecture.Application.IntegrationTests.TodoLists.Commands
 
             var command = new PurgeTodoListsCommand();
 
-            FluentActions.Invoking(() => SendAsync(command))
-                .Should().NotThrow<ForbiddenAccessException>();
+            await FluentActions.Invoking(() => SendAsync(command))
+                .Should().NotThrowAsync<ForbiddenAccessException>();
         }
 
         [Test]

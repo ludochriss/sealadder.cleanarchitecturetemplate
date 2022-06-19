@@ -2,6 +2,7 @@ using CleanArchitecture.Application;
 using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Infrastructure;
 using CleanArchitecture.Infrastructure.Persistence;
+using CleanArchitecture.Infrastructure.Services;
 using CleanArchitecture.WebUI.Filters;
 using CleanArchitecture.WebUI.Services;
 using FluentValidation.AspNetCore;
@@ -9,12 +10,15 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using NSwag;
 using NSwag.Generation.Processors.Security;
 using System.Linq;
+using System.Net.Http;
 
 namespace CleanArchitecture.WebUI
 {
@@ -34,21 +38,24 @@ namespace CleanArchitecture.WebUI
             services.AddInfrastructure(Configuration);
 
             services.AddSingleton<ICurrentUserService, CurrentUserService>();
-
+            
             services.AddHttpContextAccessor();
-
+            services.AddLogging();
+            
             services.AddHealthChecks()
                 .AddDbContextCheck<ApplicationDbContext>();
-
+          
             services.AddControllersWithViews(options =>
                 options.Filters.Add<ApiExceptionFilterAttribute>())
                     .AddFluentValidation();
 
             services.AddRazorPages();
+            services.AddHttpClient();
 
             // Customise default API behaviour
             services.Configure<ApiBehaviorOptions>(options =>
             {
+                
                 options.SuppressModelStateInvalidFilter = true;
             });
 
@@ -80,6 +87,7 @@ namespace CleanArchitecture.WebUI
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
+                
             }
             else
             {

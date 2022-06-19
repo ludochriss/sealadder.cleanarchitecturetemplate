@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CleanArchitecture.Application.Common.Mappings;
+using CleanArchitecture.Application.Movies.Queries.GetMovies;
 using CleanArchitecture.Application.TodoLists.Queries.GetTodos;
 using CleanArchitecture.Domain.Entities;
 using NUnit.Framework;
@@ -22,7 +23,7 @@ namespace CleanArchitecture.Application.UnitTests.Common.Mappings
 
             _mapper = _configuration.CreateMapper();
         }
-
+        //TODO  make this test pass
         [Test]
         public void ShouldHaveValidConfiguration()
         {
@@ -32,6 +33,11 @@ namespace CleanArchitecture.Application.UnitTests.Common.Mappings
         [Test]
         [TestCase(typeof(TodoList), typeof(TodoListDto))]
         [TestCase(typeof(TodoItem), typeof(TodoItemDto))]
+        [TestCase(typeof(Movie), typeof(MovieDto))]
+        [TestCase(typeof(MovieDto), typeof(MovieVm))]
+        [TestCase(typeof(MovieList), typeof(MovieListDto))]
+        [TestCase(typeof(MovieListDto), typeof(MovieList))]
+
         public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)
         {
             var instance = GetInstanceOf(source);
