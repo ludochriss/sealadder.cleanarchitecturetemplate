@@ -16,6 +16,7 @@ export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 export interface IMovieClient {
     getMovieInfo(path: string | null | undefined): Observable<MovieVm>;
+    tagEmotion(movieId: number | undefined, userId: number | undefined, emotion: string | null | undefined): Observable<boolean>;
 }
 
 @Injectable({
@@ -79,6 +80,64 @@ export class MovieClient implements IMovieClient {
             }));
         }
         return _observableOf<MovieVm>(<any>null);
+    }
+
+    tagEmotion(movieId: number | undefined, userId: number | undefined, emotion: string | null | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/Movie?";
+        if (movieId === null)
+            throw new Error("The parameter 'movieId' cannot be null.");
+        else if (movieId !== undefined)
+            url_ += "movieId=" + encodeURIComponent("" + movieId) + "&";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        if (emotion !== undefined && emotion !== null)
+            url_ += "emotion=" + encodeURIComponent("" + emotion) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTagEmotion(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTagEmotion(<any>response_);
+                } catch (e) {
+                    return <Observable<boolean>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<boolean>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processTagEmotion(response: HttpResponseBase): Observable<boolean> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<boolean>(<any>null);
     }
 }
 
@@ -718,6 +777,7 @@ export class WeatherForecastClient implements IWeatherForecastClient {
 export class MovieVm implements IMovieVm {
     id?: number;
     title?: string | undefined;
+    emotionCount?: number;
 
     constructor(data?: IMovieVm) {
         if (data) {
@@ -732,6 +792,7 @@ export class MovieVm implements IMovieVm {
         if (_data) {
             this.id = _data["id"];
             this.title = _data["title"];
+            this.emotionCount = _data["emotionCount"];
         }
     }
 
@@ -746,6 +807,7 @@ export class MovieVm implements IMovieVm {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["title"] = this.title;
+        data["emotionCount"] = this.emotionCount;
         return data; 
     }
 }
@@ -753,6 +815,7 @@ export class MovieVm implements IMovieVm {
 export interface IMovieVm {
     id?: number;
     title?: string | undefined;
+    emotionCount?: number;
 }
 
 export class PaginatedListOfTodoItemDto implements IPaginatedListOfTodoItemDto {

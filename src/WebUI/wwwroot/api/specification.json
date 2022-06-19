@@ -35,6 +35,53 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": [
+          "Movie"
+        ],
+        "operationId": "Movie_TagEmotion",
+        "parameters": [
+          {
+            "name": "movieId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "emotion",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/TodoItems": {
@@ -482,6 +529,10 @@
           "title": {
             "type": "string",
             "nullable": true
+          },
+          "emotionCount": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },

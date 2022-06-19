@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using CleanArchitecture.Application.Analytics;
 using CleanArchitecture.Application.Movies.Commands.TagEmotion;
 using CleanArchitecture.Application.Movies.Queries;
 using CleanArchitecture.Application.Movies.Queries.GetMovies;
@@ -35,6 +36,16 @@ namespace CleanArchitecture.WebUI.Controllers
             }); ;
 
             throw new NotImplementedException();
+        }
+
+        public async Task<ActionResult<RequestVM>> RequestInfo(DateTime start, DateTime end)
+        {
+            return await Mediator.Send(new AnalyticsQuery
+            {
+                Start = start,
+                End = end
+            }) ;
+
         }
 
         //[HttpGet]

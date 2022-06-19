@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Events;
 
-namespace CleanArchitecture.Domain.Entities
+namespace CleanArchitecture.Application.Analytics
 {
-    public class TotalSearches
+    public class RequestVM
     {
         public List<MovieSearchedEvent> MovieSearches { get; set; }
 
-       public List<EmotionTaggedEvent> EmotionTags { get; set; }
-
+        public List<EmotionTaggedEvent> EmotionTags { get; set; }
     }
 }

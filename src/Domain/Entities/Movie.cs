@@ -32,6 +32,11 @@ namespace CleanArchitecture.Domain.Entities
         
         public List<Emotion> MovieEmotions { get; set; }
 
+        public void TagEmotion(Movie movie, User user)
+        {
+            var eTE = new EmotionTaggedEvent(movie, user);
+            DomainEvents.Add(eTE);
+        }
         public void UpdateMovieInfo(MovieSearchedEvent mse,string url)
         {
             DomainEvents.Add(mse);
