@@ -12,6 +12,9 @@ namespace CleanArchitecture.Application.Movies.Queries.GetMovies
         public int Id { get; set; }
 
         public string Title { get; set; }
+
+        public int EmotionCount { get; set; }
+
         public void Mapping(Profile profile)
         {
 

@@ -30,7 +30,7 @@ namespace CleanArchitecture.Domain.Entities
         public List<DomainEvent> DomainEvents { get; set; } = new List<DomainEvent>();
 
         
-        public List<Emotion> Emotions { get; set; }
+        public List<Emotion> MovieEmotions { get; set; }
 
         public void UpdateMovieInfo(MovieSearchedEvent mse,string url)
         {

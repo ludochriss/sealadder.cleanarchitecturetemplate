@@ -1,5 +1,6 @@
 using System;
 using CleanArchitecture.Application.Common.Interfaces;
+using CleanArchitecture.Application.Movies.Commands.TagEmotion;
 using CleanArchitecture.Application.Movies.Queries;
 using CleanArchitecture.Application.Movies.Queries.GetMovies;
 using CleanArchitecture.WebUI.Controllers;
@@ -21,6 +22,7 @@ namespace MovieTests
     }
     public class MovieTests
     {
+        private readonly IApplicationDbContext _context;
         public string Path { get => _path;}
         public string _path = "https://api.themoviedb.org/3/movie/505?api_key=05de5ca3aa311e569babae21ac91e652&language=en-US";
 
@@ -33,12 +35,11 @@ namespace MovieTests
 
 
             Assert.NotNull(cont);
-           Assert.IsType<MovieVm>(cont.GetMovieInfo(Path).Result);
+          // Assert.IsType<MovieVm>(cont.GetMovieInfo(Path).Result);
+         
             
-
         }
-        //[Fact]
-        //public async void 
+    
 
 
 

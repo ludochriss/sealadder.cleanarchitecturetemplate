@@ -27,7 +27,7 @@ namespace CleanArchitecture.WebUI.Controllers
         [HttpPost]
         public async Task<ActionResult<bool>> TagEmotion(int movieId, int userId, string emotion)
         {
-            return await Mediator.Send(new TagMovieWithEmotion
+            return await Mediator.Send(new TagMovieWithEmotionCommand
             {
                 MovieId = movieId,
                 UserId = userId,
