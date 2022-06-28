@@ -23,8 +23,8 @@ namespace CleanArchitecture.Infrastructure.Persistence
             if (userManager.Users.All(u => u.UserName != administrator.UserName))
             {
                 await userManager.CreateAsync(administrator, "Administrator1!");
-                await userManager.AddToRolesAsync(administrator, new [] { administratorRole.Name });
-                
+                await userManager.AddToRolesAsync(administrator, new[] { administratorRole.Name });
+
             }
         }
         public static async Task SeedSampleMovieUsers(ApplicationDbContext context)
@@ -44,78 +44,51 @@ namespace CleanArchitecture.Infrastructure.Persistence
 
 
 
-        //public static async Task SeedEmotionsAsync(ApplicationDbContext _db)
-        //{
-
-
-        //    if (!_db.Emotions.Any())
-        //    {
-                
-        //        _db.MovieEmotionLists.Add(new MovieEmotionList()
-        //        {
-
-                    
-                    
-        //            MovieEmotions ={
-        //                        new MovieEmotion { Emotion = "None", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Admiration", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Adoration", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Aesthetic", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Appreciation", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Amusement", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Anxiety", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Awe", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Awkwardness", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Boredom", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Calmness", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Confusion", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Craving", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Disgust", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Empathetic pain", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Entrancement", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Envy", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Excitement", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Fear", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Horror", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Interest", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Joy", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Nostalgia", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Romance", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Sadness", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Satisfaction", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Sexual desire", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Sympathy", Count = 0 },
-        //                        new MovieEmotion { Emotion = "Triumph", Count = 0 }
-        //    }
-        //        }
-        //        );
-        //       await _db.SaveChangesAsync();
-               
-        //    }
-        //}
-        public static async Task SeedSampleDataAsync(ApplicationDbContext context)
+        public static async Task SeedEmotionsAsync(ApplicationDbContext _db)
         {
-            // Seed, if necessary
-            if (!context.TodoLists.Any())
-            {
-                context.TodoLists.Add(new TodoList
-                {
-                    Title = "Shopping",
-                    Items =
-                    {
-                        new TodoItem { Title = "Apples", Done = true },
-                        new TodoItem { Title = "Milk", Done = true },
-                        new TodoItem { Title = "Bread", Done = true },
-                        new TodoItem { Title = "Toilet paper" },
-                        new TodoItem { Title = "Pasta" },
-                        new TodoItem { Title = "Tissues" },
-                        new TodoItem { Title = "Tuna" },
-                        new TodoItem { Title = "Water" }
-                    }
-                });
+                List<Emotion> emotionSeed =  new List<Emotion>(){
+                     new Emotion { Name = "None"  },
+                               new Emotion {  Name = "Admiration"  },
+                               new Emotion {  Name = "Adoration"  },
+                               new Emotion {  Name = "Aesthetic"  },
+                               new Emotion {  Name = "Appreciation"  },
+                               new Emotion {  Name = "Amusement"  },
+                               new Emotion {  Name = "Anxiety"  },
+                               new Emotion {  Name = "Awe"  },
+                               new Emotion {  Name = "Awkwardness"  },
+                               new Emotion {  Name = "Boredom"  },
+                               new Emotion {  Name = "Calmness"  },
+                               new Emotion {  Name = "Confusion"  },
+                               new Emotion {  Name = "Craving"  },
+                               new Emotion {  Name = "Disgust"  },
+                               new Emotion {  Name = "Empathetic pain"  },
+                               new Emotion {  Name = "Entrancement"  },
+                               new Emotion {  Name = "Envy"  },
+                               new Emotion {  Name = "Excitement"  },
+                               new Emotion {  Name = "Fear"  },
+                               new Emotion {  Name = "Horror"  },
+                               new Emotion {  Name = "Interest"  },
+                               new Emotion {  Name = "Joy"  },
+                               new Emotion {  Name = "Nostalgia"  },
+                               new Emotion {  Name = "Romance"  },
+                               new Emotion {  Name = "Sadness"  },
+                               new Emotion {  Name = "Satisfaction"  },
+                               new Emotion {  Name = "Sexual desire"  },
+                               new Emotion {  Name = "Sympathy"  },
+                               new Emotion {  Name = "Triumph"  },          
+                };
 
-                await context.SaveChangesAsync();
-            }
+            if (!_db.Emotions.Any())
+            {
+                            foreach(var m in emotionSeed){
+
+                                   _db.Emotions.Add(m);
+                            }
+             
+            await _db.SaveChangesAsync();
+
         }
     }
+  
+}
 }

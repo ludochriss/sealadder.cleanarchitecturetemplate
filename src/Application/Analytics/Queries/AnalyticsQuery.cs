@@ -13,18 +13,8 @@ namespace CleanArchitecture.WebUI.Controllers
 {
     public class AnalyticsQuery : IRequest<RequestVM>
     {
-        public DateTime _start;
-        public string Start
-        {
-            get => _start.ToString();
-            set => DateTime.Parse(value);
-        }
-        public DateTime _end;
-        public string End
-        {
-            get => _start.ToString();
-            set => DateTime.Parse(value);
-        }       
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
     }
     public class AnalyticsQueryHandler : IRequestHandler<AnalyticsQuery,RequestVM>
     {
@@ -37,22 +27,30 @@ namespace CleanArchitecture.WebUI.Controllers
             _logger = logger;
             _context = context; 
         }
-        //fucking nailed it
+        
         public Task<RequestVM> Handle(AnalyticsQuery request, CancellationToken cancellationToken)
         {
             var logger = _logger.CreateLogger<AnalyticsQueryHandler>();
             logger.LogInformation($"General analytics query made at {DateTime.Now}");
+
             var result = _context.TotalSearches
                 .Select(s => new RequestVM
-                {
-                    MovieSearches = s.MovieSearches
-                    .Where(s => s.DateOccurred > request._start && s.DateOccurred < request._end)
-                .ToList(),
+                {      
+                    MovieSearches = s.MovieSearches.Where(s => s.DateOccurred > request.Start && s.DateOccurred < request.End).ToList(),
                     EmotionTags = s.EmotionTags
-                    .Where(s => s.DateOccurred > request._start && s.DateOccurred < request._end)
+                    .Where(s => s.DateOccurred > request.Start && s.DateOccurred < request.End)
                     .ToList()
                 });
-            return (Task<RequestVM>)result;
+
+            var result2 = _context.TotalSearches
+                .Select(s => new RequestVM
+                {      
+                    MovieSearches = s.MovieSearches.Where(s => s.DateOccurred > request.Start && s.DateOccurred < request.End).ToList(),
+                    EmotionTags = s.EmotionTags
+                    .Where(s => s.DateOccurred > request.Start && s.DateOccurred < request.End)
+                    .ToList()
+                });
+        return (Task<RequestVM>)result;
         }
     }
 }

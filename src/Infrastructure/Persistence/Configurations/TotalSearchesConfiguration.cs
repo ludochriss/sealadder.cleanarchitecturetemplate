@@ -12,7 +12,7 @@ namespace CleanArchitecture.Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<TotalSearches> builder)
         {
             builder.HasNoKey();
-            
+           
         }
 
     }

@@ -21,9 +21,9 @@ namespace CleanArchitecture.Application.Analytics.Queries
             private readonly ILoggerFactory _logger;
 
             
-            public UserAnalyticsQueryHandler(IApplicationDbContext _context, ILoggerFactory logger)
+            public UserAnalyticsQueryHandler(IApplicationDbContext context, ILoggerFactory logger)
             {
-                _context = _context;
+                _context = context;
                 _logger = logger;
             }
             
@@ -32,18 +32,27 @@ namespace CleanArchitecture.Application.Analytics.Queries
                 var logger = _logger.CreateLogger<UserAnalyticsQueryHandler>();
 
                 logger.LogInformation($"User Analytics request has been made at {DateTime.Now}");
-
-                var result = _context.MovieUsers
-                    .Select(x => new UserInfoVm
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                        EmotionsSearched = x.UserEmotions,
-                        MoviesSearched = x.Movies
-                    })
-                    .FirstOrDefaultAsync(x => x.Id == request.UserId);
-                    
+                try
+                {
+                    var result = _context.MovieUsers
+                   .Select(x => new UserInfoVm
+                   {
+                       Id = x.Id,
+                       Name = x.Name,
+                       EmotionsSearched = x.UserEmotions,
+                       MoviesSearched = x.Movies
+                   })
+                   .FirstOrDefaultAsync(x => x.Id == request.UserId);
                     return result;
+                }
+                catch (Exception e)
+                {
+                    logger.LogError(e.Message);
+                    throw new Exception(e.Message);
+                }
+               
+
+                
             }
         }
     }

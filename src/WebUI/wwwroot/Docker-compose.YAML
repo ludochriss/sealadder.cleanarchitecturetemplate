@@ -1,0 +1,10 @@
+﻿version: '2'
+
+services:
+  pgsql:
+    volumes:
+      - sealadder-data:/var/lib/postgresql
+
+volumes:
+  sealadder-data:
+    external: true

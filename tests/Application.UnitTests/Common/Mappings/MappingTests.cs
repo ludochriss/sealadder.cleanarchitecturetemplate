@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using CleanArchitecture.Application.Common.Mappings;
 using CleanArchitecture.Application.Movies.Queries.GetMovies;
-using CleanArchitecture.Application.TodoLists.Queries.GetTodos;
 using CleanArchitecture.Domain.Entities;
 using NUnit.Framework;
 using System;
@@ -31,8 +30,6 @@ namespace CleanArchitecture.Application.UnitTests.Common.Mappings
         }
         
         [Test]
-        [TestCase(typeof(TodoList), typeof(TodoListDto))]
-        [TestCase(typeof(TodoItem), typeof(TodoItemDto))]
         [TestCase(typeof(Movie), typeof(MovieDto))]
         [TestCase(typeof(MovieDto), typeof(MovieVm))]
         [TestCase(typeof(MovieList), typeof(MovieListDto))]

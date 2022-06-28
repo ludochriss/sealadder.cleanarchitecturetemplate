@@ -1,0 +1,16 @@
+# POST http://localhost:5000/api/Profile/SeedDatabase  HTTP/1.1
+
+# # Seed the goals
+# POST http://localhost:5000/api/Goals/SeedDatabase HTTP/1.1
+
+# # Get recommendations for a given goal
+# GET http://localhost:5000/api/Recommendations/GetRecommendedPlaylists?GoalId=491 HTTP/1.1
+
+# GET https://api.themoviedb.org/3/movie/550?api_key=b45808cfc639faa44235410b835b0912 HTTP/1.1
+
+
+//get the movie info with ID of 8
+//GET https://localhost:5001/api/movie?path=https://api.themoviedb.org/3/movie/8?api_key=05de5ca3aa311e569babae21ac91e652&language=en-US
+
+//get the movie info with ID of 271
+GET https://localhost:5001/api/movie?path=https://api.themoviedb.org/3/movie/8?api_key=05de5ca3aa311e569babae21ac91e652&language=en-US

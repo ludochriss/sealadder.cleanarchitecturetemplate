@@ -6,11 +6,13 @@ using CleanArchitecture.Domain.Events;
 
 namespace CleanArchitecture.Domain.Entities
 {
-    public class TotalSearches: AuditableEntity
+    public class TotalSearches
     {
         public List<MovieSearchedEvent> MovieSearches { get; set; }
 
-       public List<EmotionTaggedEvent> EmotionTags { get; set; }
-
+        public List<EmotionTaggedEvent> EmotionTags { get; set; }
     }
+
+    
+
 }

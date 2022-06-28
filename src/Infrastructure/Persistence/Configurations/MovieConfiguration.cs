@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CleanArchitecture.Domain.Entities;
+﻿using CleanArchitecture.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -16,6 +13,7 @@ namespace CleanArchitecture.Infrastructure.Persistence.Configurations
             b.Ignore(e => e.DomainEvents);
             b.Property(m => m.Id)
                  .ValueGeneratedNever();
+                b.Ignore(m=>m.Adult);
         }
     }
 }

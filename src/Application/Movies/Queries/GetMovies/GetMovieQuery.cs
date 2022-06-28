@@ -30,7 +30,7 @@ namespace CleanArchitecture.Application.Movies.Queries
         private readonly IHttpClientFactory _client;
         private readonly IMovieCacheService _cache;
         private readonly ILoggerFactory _logger;
-        private readonly IIdentityService _identity;
+       
 
         //di of mapper, httpclient and dbcontext
         public GetMovieQueryHandler(IMovieCacheService cache, IApplicationDbContext context, IMapper mapper,
@@ -40,8 +40,7 @@ namespace CleanArchitecture.Application.Movies.Queries
             _context = context;
             _mapper = mapper;
             _client = client;
-            _cache = cache;
-            
+            _cache = cache;            
         }   
         public async Task<MovieVm> Handle(GetMovieQuery request, CancellationToken cancellationToken)
         {            //------STOPWATCH & LOGGER------
@@ -53,7 +52,7 @@ namespace CleanArchitecture.Application.Movies.Queries
 
             //create new movieVM
             var vm = new MovieVm();
-
+            
             //check cache for movieslist or create and return an empty list             
             MovieList movieList = _cache.GetCachedMovies();
             logger.LogInformation("Cache Accessed");
@@ -64,10 +63,11 @@ namespace CleanArchitecture.Application.Movies.Queries
             {
                 if (m.Url == request.Path)
                 {
+                    //--STOP HERE FOR CACHE---
                     long located = stopwatch.ElapsedTicks;
                     m.UpdateMovieInfo(new MovieSearchedEvent(m, stopwatch.Elapsed, true), request.Path);                    
                     _context.Movies.Update(m);
-                    _context.SaveChangesAsync(cancellationToken);
+                  await  _context.SaveChangesAsync(cancellationToken);
                     long saved = stopwatch.ElapsedTicks;
                     movieList.Movies.Add(m);
                     _cache.SetMoviesToCache(movieList);
@@ -77,7 +77,7 @@ namespace CleanArchitecture.Application.Movies.Queries
                     stopwatch.Stop();
                     return vm;
                 }
-            }
+            }        
             //-------create HttpClient and time the call-------------
             var requestSent = stopwatch.Elapsed;
             var cli = _client.CreateClient();
@@ -88,22 +88,15 @@ namespace CleanArchitecture.Application.Movies.Queries
             if (response.IsSuccessStatusCode)
             {
                 //start time                
-                var mR = _cache.DeserializeMovieResponse(response);
+                var m = _cache.DeserializeMovieResponse(response);
                 try
                 {
-                    var m =  await _context.Movies                        
-                        .FirstOrDefaultAsync(l => l.Id == mR.Id);
-
-                    if (m == null)
-                    {
-                        m = new Movie();                
-                    }
                     //updated information about movies
                     m.UpdateMovieInfo(new MovieSearchedEvent(m, stopwatch.Elapsed, false), request.Path);                 
                    
                     //update the tracked item and save
-                    _context.Movies.Update(m);
-                    _context.SaveChangesAsync(cancellationToken);
+                    _context.Movies.Add(m);
+                    await _context.SaveChangesAsync(cancellationToken);
                     //update the cache
                     movieList.Movies.Add(m);
                     _cache.SetMoviesToCache(movieList);

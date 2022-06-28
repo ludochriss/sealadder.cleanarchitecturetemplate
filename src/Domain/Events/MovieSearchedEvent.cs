@@ -6,7 +6,7 @@ using CleanArchitecture.Domain.Entities;
 
 namespace CleanArchitecture.Domain.Events
 {
-    public class MovieSearchedEvent :DomainEvent
+    public class MovieSearchedEvent : DomainEvent
     {
         public MovieSearchedEvent()
         {
@@ -17,11 +17,12 @@ namespace CleanArchitecture.Domain.Events
             TimeTaken = timeTaken;
             MovieItem = movie;
             IsFromCache = cache;
-            DateOccurred = DateTime.Now;                     
+            DateOccurred = DateTime.Now;
+
         }
         public Movie MovieItem { get; set; }
         public TimeSpan TimeTaken { get; set; }
         public bool IsFromCache { get; set; }
-         
+
     }
 }

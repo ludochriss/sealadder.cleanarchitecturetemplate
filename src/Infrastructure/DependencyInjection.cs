@@ -1,5 +1,4 @@
 ﻿using CleanArchitecture.Application.Common.Interfaces;
-using CleanArchitecture.Infrastructure.Files;
 using CleanArchitecture.Infrastructure.Identity;
 using CleanArchitecture.Infrastructure.Persistence;
 using CleanArchitecture.Infrastructure.Services;
@@ -17,9 +16,6 @@ namespace CleanArchitecture.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-
-            
-
             if (configuration.GetValue<bool>("UseInMemoryDatabase"))
             {
                 services.AddDbContext<ApplicationDbContext>(options =>
@@ -27,37 +23,34 @@ namespace CleanArchitecture.Infrastructure
             }
             else
             {
-                
-               
                 services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlServer(
+                    options.UseNpgsql(
                         configuration.GetConnectionString("DefaultConnection"),
                         b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
             }
+
             services.AddMemoryCache();
             services.AddScoped<IMovieCacheService, MovieCacheService>();
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
-            
             services.AddScoped<IDomainEventService, DomainEventService>();
-            services.AddLogging(opt=>
-            opt.AddConsole()
+            services.AddLogging(opt =>
+              opt.AddConsole()
             );
+
             services
                 .AddDefaultIdentity<ApplicationUser>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddIdentityServer()
-                
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
             services.AddTransient<IDateTime, DateTimeService>();
             services.AddTransient<IIdentityService, IdentityService>();
-            services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
             services.AddSingleton<ILoggerFactory, LoggerFactory>();
             services.AddAuthentication()
                 .AddIdentityServerJwt();
-            
+
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator"));

@@ -28,55 +28,42 @@ namespace CleanArchitecture.WebUI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<bool>> TagEmotion(int movieId, int userId, string emotion)
+        public async Task<ActionResult<bool>> TagEmotion(int movieId, int userId, int emotionId)
         {
             return await Mediator.Send(new TagMovieWithEmotionCommand
             {
                 MovieId = movieId,
                 UserId = userId,
-                Emotion= emotion
-            }); ;
+                EmotionId =  emotionId
+            }); 
 
             throw new NotImplementedException();
         }
         [HttpGet]
-        [Route("Movie/GeneralAnalyticsInfo")]
+        [Route("movie/general")]
         public async Task<ActionResult<RequestVM>> RequestAnalyticsInfo(string start, string end)
         {
+            var _start = DateTime.Parse(start);
+            var _end = DateTime.Parse(end);
             return await Mediator.Send(new AnalyticsQuery
-            {
-                
-                Start = start,
-                End = end
-            }); ;
-
+            {                
+                Start = _start,
+                End = _end
+            }); 
         }
         [HttpGet]
-        [Route("Movie/UserAnalyticsInfo")]
-        public async Task<ActionResult<UserInfoVm>> GetRequestsForUser(string id)
-        {
-            bool valid = Int32.TryParse(id, out int result);
-            if (valid)
-            {
+        [Route("Movie/user")]
+        public async Task<ActionResult<UserInfoVm>> GetRequestsForUser(int id)
+        {                   
                 return await Mediator.Send(new UserAnalyticsQuery
                 {
-                    UserId = result
-
+                    UserId = id
                 }) ;
-            }
+            
             throw new Exception("Id cannot be a non-integer");
-
         }
 
-        //[HttpGet]
-        //public async Task<ActionResult<MovieVm>> GetMovieInfo(string path, int emo)
-        //{
-        //    return await Mediator.Send(new GetMovieQueryWithEmotion)
-        //    {
-        //        Path = path
-
-        //    });
-        //}
+   
 
 
  

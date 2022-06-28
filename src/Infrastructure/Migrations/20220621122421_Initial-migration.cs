@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CleanArchitecture.Infrastructure.Migrations
 {
-    public partial class initial : Migration
+    public partial class Initialmigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -68,7 +69,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -94,31 +95,9 @@ namespace CleanArchitecture.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TodoLists",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Created = table.Column<DateTime>(nullable: false),
-                    CreatedBy = table.Column<string>(nullable: true),
-                    LastModified = table.Column<DateTime>(nullable: true),
-                    LastModifiedBy = table.Column<string>(nullable: true),
-                    Title = table.Column<string>(maxLength: 200, nullable: false),
-                    Colour = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TodoLists", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TotalSearches",
                 columns: table => new
                 {
-                    Created = table.Column<DateTime>(nullable: false),
-                    CreatedBy = table.Column<string>(nullable: true),
-                    LastModified = table.Column<DateTime>(nullable: true),
-                    LastModifiedBy = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -129,7 +108,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -150,7 +129,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -240,7 +219,6 @@ namespace CleanArchitecture.Infrastructure.Migrations
                     LastModified = table.Column<DateTime>(nullable: true),
                     LastModifiedBy = table.Column<string>(nullable: true),
                     Title = table.Column<string>(nullable: true),
-                    Adult = table.Column<bool>(nullable: false),
                     Url = table.Column<string>(nullable: true),
                     OriginalLanguage = table.Column<string>(nullable: true),
                     ImdbId = table.Column<string>(nullable: true),
@@ -260,39 +238,11 @@ namespace CleanArchitecture.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TodoItems",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Created = table.Column<DateTime>(nullable: false),
-                    CreatedBy = table.Column<string>(nullable: true),
-                    LastModified = table.Column<DateTime>(nullable: true),
-                    LastModifiedBy = table.Column<string>(nullable: true),
-                    ListId = table.Column<int>(nullable: false),
-                    Title = table.Column<string>(maxLength: 200, nullable: false),
-                    Note = table.Column<string>(nullable: true),
-                    Priority = table.Column<int>(nullable: false),
-                    Reminder = table.Column<DateTime>(nullable: true),
-                    Done = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TodoItems", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TodoItems_TodoLists_ListId",
-                        column: x => x.ListId,
-                        principalTable: "TodoLists",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Emotions",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(nullable: true),
                     Count = table.Column<int>(nullable: false),
                     MovieId = table.Column<int>(nullable: true),
@@ -324,8 +274,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
-                unique: true,
-                filter: "[NormalizedName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -351,8 +300,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
-                unique: true,
-                filter: "[NormalizedUserName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_DeviceCodes_DeviceCode",
@@ -389,11 +337,6 @@ namespace CleanArchitecture.Infrastructure.Migrations
                 name: "IX_PersistedGrants_SubjectId_ClientId_Type",
                 table: "PersistedGrants",
                 columns: new[] { "SubjectId", "ClientId", "Type" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TodoItems_ListId",
-                table: "TodoItems",
-                column: "ListId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -423,9 +366,6 @@ namespace CleanArchitecture.Infrastructure.Migrations
                 name: "PersistedGrants");
 
             migrationBuilder.DropTable(
-                name: "TodoItems");
-
-            migrationBuilder.DropTable(
                 name: "TotalSearches");
 
             migrationBuilder.DropTable(
@@ -436,9 +376,6 @@ namespace CleanArchitecture.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Movies");
-
-            migrationBuilder.DropTable(
-                name: "TodoLists");
 
             migrationBuilder.DropTable(
                 name: "MovieUsers");

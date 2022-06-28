@@ -32,14 +32,12 @@ namespace CleanArchitecture.Infrastructure.Persistence
             _domainEventService = domainEventService;
             _dateTime = dateTime;
         }
-        
+
         public DbSet<TotalSearches> TotalSearches { get; set; }
         public DbSet<Emotion> Emotions { get; set; }
-        public DbSet<TodoItem> TodoItems { get; set; }
-        public DbSet<TodoList> TodoLists { get; set; }
         public DbSet<Movie> Movies { get; set; }
         public DbSet<User> MovieUsers { get; set; }
-
+        public DbSet<MovieEmotion> MovieEmotions { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
@@ -69,7 +67,7 @@ namespace CleanArchitecture.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-           
+
             base.OnModelCreating(builder);
         }
 
